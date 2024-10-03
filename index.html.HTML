@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Eléctrica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .section input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .section button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .section button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Calculadora Eléctrica</h1>
+
+    <div class="section">
+        <h2>Cálculo de Resistencias (Serie/Paralelo)</h2>
+        <label for="resistencias">Ingrese los valores de las resistencias (separados por comas):</label>
+        <input type="text" id="resistencias" placeholder="Ejemplo: 10, 20, 30">
+        <button onclick="calcularResistencias()">Calcular Resistencias</button>
+        <p id="resultadoResistencias"></p>
+    </div>
+
+    <div class="section">
+        <h2>Cálculo de Impedancia en Circuitos AC</h2>
+        <input type="number" id="frecuencia" placeholder="Frecuencia (Hz)">
+        <input type="number" id="inductancia" placeholder="Inductancia (Henrios)">
+        <input type="number" id="capacitancia" placeholder="Capacitancia (Faradios)">
+        <input type="number" id="resistenciaAC" placeholder="Resistencia (Ohmios)">
+        <button onclick="calcularImpedancia()">Calcular Impedancia</button>
+        <p id="resultadoImpedancia"></p>
+    </div>
+
+    <script>
+        function calcularResistencias() {
+            const resistencias = document.getElementById('resistencias').value.split(',').map(Number);
+            const resistenciaSerie = resistencias.reduce((a, b) => a + b, 0);
+            const resistenciaParalelo = 1 / resistencias.reduce((a, b) => a + (1 / b), 0);
+
+            document.getElementById('resultadoResistencias').innerText = 
+                `Resistencia en serie: ${resistenciaSerie} ohmios, Resistencia en paralelo: ${resistenciaParalelo} ohmios`;
+        }
+
+        function calcularImpedancia() {
+            const frecuencia = parseFloat(document.getElementById('frecuencia').value);
+            const inductancia = parseFloat(document.getElementById('inductancia').value);
+            const capacitancia = parseFloat(document.getElementById('capacitancia').value);
+            const resistencia = parseFloat(document.getElementById('resistenciaAC').value);
+
+            const reactanciaL = 2 * Math.PI * frecuencia * inductancia;
+            const reactanciaC = 1 / (2 * Math.PI * frecuencia * capacitancia);
+            const impedancia = Math.sqrt(Math.pow(resistencia, 2) + Math.pow(reactanciaL - reactanciaC, 2));
+
+            document.getElementById('resultadoImpedancia').innerText = 
+                `Reactancia inductiva: ${reactanciaL} ohmios, Reactancia capacitiva: ${reactanciaC} ohmios, Impedancia: ${impedancia} ohmios`;
+        }
+    </script>
+
+</body>
+</html>
